@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# This script plays all mp3s of a directory with mplayer - by Master_ex
+
+IFS=$'\n'
+
+# Create arguments array
+args=("$@")
+
+# The counter is used to parse all the arguments
+counter=0
+
+# Agruments options -0->no , 1->yes
+random=0
+r="-r"
+file=""
+
+while [ $counter -lt $# ]; do
+	if [ ${args[$counter]} = $r ]; then
+		let random=1
+		let counter=counter+1
+		continue
+	fi
+	file=${args[$counter]}
+	let counter=counter+1
+done
+
+if [ $random -eq 1 ]; then
+	for i in $( ls $file | sort -R | grep mp3 ); do
+		mplayer $file$i
+	done
+else
+	for i in $( ls $file | grep mp3 ); do
+		mplayer $file$i
+	done
+fi
+
+exit
