@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# uses nmap to check a subnet's hosts port 80 for http services
+
+if [ $# -eq '0' ]; then
+	subnet=192.168.1.3/25
+else
+	subnet=$1
+fi
+
+echo "Search started now!"
+date
+echo "subnet is $subnet"
+
+for ip in $(nmap -sP $subnet |  grep -o '[0-9*]*\.[0-9*]*\.[0-9*]*\.[0-9*]*'); do
+	nmap $ip -p 80 | grep 80 | grep http |grep open && echo "The IP address is: $ip"
+done
+
+echo "Search ended now!"
+date
+
+exit 0
