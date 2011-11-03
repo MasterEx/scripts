@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+DESTINATION="/tmp/deleted/"
+mkdir -p $DESTINATION
+
+if [[ -a $DESTINATION"src.log" ]]; then
+  mv $DESTINATION"src.log" "/tmp/src.log"
+  mv $DESTINATION"dest.log" "/tmp/dest.log"
+  ls $DESTINATION
+fi
+  
+for FILE in "$@"
+do
+  files="$(ls -1 "$FILE")"
+  dires="$(ls -d "$FILE")"
+  echo $FILE
+  tfiles="$tfiles""$files\n"
+  mv "$FILE" $DESTINATION
+  echo "$DESTINATION$FILE" >> $DESTINATION"src.log"
+  echo $(pwd)"/$FILE" >> $DESTINATION"dest.log"
+done
+
+echo -e "END" >> $DESTINATION"src.log"
+echo -e "END" >> $DESTINATION"dest.log"
+
+if [[ -a "/tmp/src.log" ]]; then
+  cat "/tmp/src.log" >> $DESTINATION"src.log"
+  cat "/tmp/dest.log" >> $DESTINATION"dest.log"
+  rm "/tmp/src.log" "/tmp/dest.log"
+fi
+
+total="$(echo -e "$tfiles"|uniq|wc -l)"
+((total--))
+
+echo "$total files deleted"

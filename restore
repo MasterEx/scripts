@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+SRC="/tmp/deleted/src.log"
+DEST="/tmp/deleted/dest.log"
+
+lines=$(cat $SRC|wc -l)
+
+while read LINE
+do
+  if [[ "$LINE" == "END" ]]; then
+    (( lines-- ))
+    tail -n "$lines" $DEST > "/tmp/tmpdest"
+    mv "/tmp/tmpdest" $DEST
+    tail -n "$lines" $SRC > "/tmp/tmpsrc"
+    mv "/tmp/tmpsrc" $SRC
+    break
+  else    
+    (( lines-- ))
+    src=$(head -n 1 $SRC)
+    tail -n "$lines" $SRC > "/tmp/tmpsrc"
+    mv "/tmp/tmpsrc" $SRC
+    dest=$LINE
+    mv "$src" "$dest"
+  fi
+done < $DEST
