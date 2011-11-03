@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# problem when restoring files
+# containing the \ character
 
 SRC="/tmp/deleted/src.log"
 DEST="/tmp/deleted/dest.log"
